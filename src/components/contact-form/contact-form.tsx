@@ -11,6 +11,7 @@ import {
   type FormiKInputFieldProps,
 } from "@/utility/types";
 import { type MailSentToastState } from "@/components/contact-form/contact-mail-toast";
+import { NODEMAILER_PASS, NODEMAILER_USER } from "@/env";
 
 export const mailValidationSchema = Yup.object({
   email: Yup.string().email("Invalid email").required("Email required"),
@@ -41,12 +42,17 @@ export default function ContactForm() {
   ) => {
     setIsSendingMail(true);
     try {
+      console.log(
+        "NODEMAILER_USER, NODEMAILER_PASS",
+        NODEMAILER_USER,
+        NODEMAILER_PASS,
+      );
       const response = await fetch("/api/sendmail", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
-
+      console.log("okkkk", response, "ksksks'< ", values);
       if (response.ok) {
         setToastState({ type: "PASS", value: true });
         resetForm();

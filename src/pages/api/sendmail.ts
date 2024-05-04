@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { createTransport } from "nodemailer";
 import { v4 } from "uuid";
 import { ValidationError } from "yup";
-
+import { NODEMAILER_USER, NODEMAILER_PASS } from "@/env";
 import { rateLimiterApi } from "@/utility/rate-limiter";
 import { mailValidationSchema } from "@/components/contact-form/contact-form";
 
@@ -16,11 +16,11 @@ const MAX_USER_PER_SECOND = 100 as const;
 
   WARNING: This rate limiting strategy uses a combination of client IP address and user agent for identification.
   - Pros: Provides a more robust identification mechanism.
-  - Cons: 
+  - Cons:
     - Users behind certain proxies or networks might share the same IP address.
     - Determined attackers can still potentially circumvent these measures.
     - Privacy concerns: Collecting IP addresses and user agents may raise privacy considerations.
-  
+
   If either the client's IP address or user agent is missing, a fallback mechanism defaults to using a UUID stored in cookies.
   - Pros: Ensures a default identification mechanism is in place.
   - Cons: UUIDs may not be entirely foolproof and can be manipulated by users.
@@ -31,6 +31,8 @@ const limiter = rateLimiterApi({
   interval: RATELIMIT_DURATION,
   uniqueTokenPerInterval: MAX_USER_PER_SECOND,
   getUserId: (req: NextApiRequest, res: NextApiResponse) => {
+    console.log("calling limiteerrrr");
+
     const userIp =
       req.headers["x-forwarded-for"] || req.socket.remoteAddress || "";
     const userAgent = req.headers["user-agent"] || "";
@@ -119,9 +121,11 @@ const sendMail = async function (
   subject: string,
   message: string,
 ): Promise<{ status: number; message: string }> {
-  const user = process.env.NODEMAILER_USER;
-  const pass = process.env.NODEMAILER_PASS;
+  console.log("calling sendmail");
 
+  const user = NODEMAILER_USER;
+  const pass = NODEMAILER_PASS;
+  console.log("user, pass", user, pass);
   if (!user && !pass) {
     return new Promise((resolve) =>
       resolve({ status: 500, message: "Internal server error" }),
@@ -137,14 +141,15 @@ const sendMail = async function (
   });
 
   const mailOptions = {
-    from: process.env.NODEMAILER_USER,
-    to: process.env.NODEMAILER_USER,
+    from: NODEMAILER_USER,
+    to: NODEMAILER_USER,
     subject: "Portfolio: [" + subject + " ]",
     text: `${name}: <${email}>\n${message}`,
   };
 
   return new Promise((resolve) => {
     transporter.sendMail(mailOptions, (error) => {
+      console.log("errorrrr", error);
       if (error) {
         resolve({ status: 500, message: "Failed to send mail" });
       } else {
@@ -158,6 +163,7 @@ const handler = async (
   req: NextApiRequest,
   res: NextApiResponse<{ status: number; message: string | string[] }>,
 ) => {
+  console.log("calling handler");
   try {
     const { method } = req;
     if (method !== "POST") {
@@ -175,6 +181,7 @@ const handler = async (
     try {
       await mailValidationSchema.validate(body, { abortEarly: false });
     } catch (validationError) {
+      console.log("validationError", validationError);
       if (validationError instanceof ValidationError) {
         res.status(422).json({
           status: 422,
@@ -189,11 +196,12 @@ const handler = async (
       return;
     }
 
+    console.log(body);
     const { name, email, subject, message } = body;
-
     const response = await sendMail(name, email, subject, message);
     res.status(response.status).send(response);
   } catch (error: any) {
+    console.log("errrororororrorororo");
     if (error?.status === 429) {
       res.status(429).json({ status: 429, message: "Rate limit exceeded" });
     } else {

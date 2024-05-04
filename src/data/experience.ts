@@ -2,35 +2,35 @@ import { type ExperienceShowcaseListItemProps } from "@/components/experience/ex
 
 export const EXPERIENCE: ExperienceShowcaseListItemProps[] = [
   {
-    title: "Reactjs Frontend Developer",
+    title: "Software Engineer",
     organisation: {
-      name: "Skima",
+      name: "ReachHub",
       href: "https://skima.ai/",
     },
-    date: "Oct 2023 - Present",
-    location: "Mumbai",
-    description: "Reactjs and Nextjs app development",
+    date: "May 2024 - Present",
+    location: "Remote",
+    description: "",
   },
   {
-    title: "Engineering Trainee",
+    title: "Software Developer",
     organisation: {
-      name: "Hexaware",
+      name: "YMGrad",
       href: "https://hexaware.com/",
     },
-    date: "July 2023 - Sep 2023",
-    location: "Remote",
+    date: "Feb 2023 - May 2024",
+    location: "Onsite",
     description:
-      "Learned to work we monorepo and got to learn application architecture, scalling and build tooling to improve CI/CD of micro services.",
+      "Learned to work we monorepo and got to learn application architecture, scaling and build tooling to improve CI/CD of micro services.",
   },
   {
-    title: "Frontend Developer Intern",
+    title: "Software Developer Intern",
     organisation: {
-      name: "Master Infotech",
+      name: "YMGrad",
       href: "https://masterinfotech.com/",
     },
-    date: "Winter - 2022",
-    location: "Remote",
+    date: "Oct 2022 - Feb 2023",
+    location: "Onsite",
     description:
-      "Worked on a team responsible for developing new features and updating old codebases to latest technologies. Learned alot about web development and CI/CD development cycle.",
+      "Worked on a team responsible for developing new features and updating old codebase to latest technologies. Learned alot about web development and CI/CD development cycle.",
   },
 ];
