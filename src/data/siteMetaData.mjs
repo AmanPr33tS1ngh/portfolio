@@ -6,7 +6,7 @@ export const siteMetadata = {
   language: "en-us",
   theme: "light",
   siteName: "",
-  siteUrl: "https://amanpr33t-portfolio",
+  siteUrl: "https://amanpr33t-s1ngh-portfolio.vercel.app/",
   siteRepo: "https://github.com/AmanPr33tS1ngh/portfolio",
   siteLogo: "/favicon.ico",
   image: "/static/homepage.png",
